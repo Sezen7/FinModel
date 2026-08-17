@@ -9,7 +9,6 @@ import '../bloc/goal_event.dart';
 import '../bloc/goal_state.dart';
 import '../../domain/entities/goal_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'add_goal_page.dart';
 import '../widgets/add_progress_dialog.dart';
 import '../widgets/ai_report_dialog.dart';
 

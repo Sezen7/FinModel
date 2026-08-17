@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/goal_model.dart';
-import '../../domain/entities/goal_entity.dart';
 
 abstract class GoalRemoteDataSource {
   Future<void> addGoal(GoalModel goal);

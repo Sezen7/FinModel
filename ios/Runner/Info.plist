@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Finmodel</string>
+	<string>FinModel Pro</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,11 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>finmodel</string>
+	<string>FinModel Pro</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Fiş ve faturalarınızı tarayıp harcamalarınızı otomatik olarak kaydetmek için kamera erişimi gereklidir.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Kayıtlı fiş ve fatura görsellerinizi yüklemek için fotoğraf galerisine erişim gereklidir.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

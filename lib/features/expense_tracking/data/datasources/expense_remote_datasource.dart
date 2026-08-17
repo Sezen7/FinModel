@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/expense_model.dart';
-import '../../domain/entities/expense_entity.dart';
 
 abstract class ExpenseRemoteDataSource {
   Future<void> addExpense(ExpenseModel expense);

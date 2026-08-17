@@ -22,6 +22,9 @@ import '../../../saving_goals/presentation/bloc/goal_state.dart';
 
 import '../../../education/presentation/pages/education_page.dart';
 import '../../../debt_management/presentation/pages/debt_page.dart';
+import '../../../budget/presentation/pages/budget_page.dart';
+import '../../../robo_advisor/presentation/pages/robo_advisor_chat_page.dart';
+import 'privacy_policy_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -607,9 +610,6 @@ class _DashboardTabState extends State<_DashboardTab> {
   }
 
   Widget _buildQuickActions(BuildContext context) {
-    final authState = context.read<AuthBloc>().state;
-    final uid = authState is Authenticated ? authState.user.uid : '';
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -627,10 +627,17 @@ class _DashboardTabState extends State<_DashboardTab> {
         ),
         _QuickActionCard(
           action: const _QuickAction(
-              icon: Icons.account_balance_wallet_outlined,
-              label: 'Gelir\nGir',
+              icon: Icons.pie_chart_outline_rounded,
+              label: 'Bütçe\nYönet',
               color: kTeal),
-          onTap: () => _showIncomeDialog(context, uid, 0, false),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BudgetPage())),
+        ),
+        _QuickActionCard(
+          action: const _QuickAction(
+              icon: Icons.psychology_outlined,
+              label: 'AI Koç\nSohbet',
+              color: kPurple),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RoboAdvisorChatPage())),
         ),
         _QuickActionCard(
           action: const _QuickAction(
@@ -644,13 +651,6 @@ class _DashboardTabState extends State<_DashboardTab> {
             }
           },
         ),
-        _QuickActionCard(
-          action: const _QuickAction(
-              icon: Icons.school_outlined,
-              label: 'Eğitim',
-              color: kPurple),
-          onTap: () => widget.onTabSelect(3),
-        ),
       ],
     );
   }
@@ -660,11 +660,26 @@ class _DashboardTabState extends State<_DashboardTab> {
 
     return Row(
       children: [
-        Expanded(child: _StatCard(label: 'Bütçe Kullanımı', value: '%${budgetUsage.toStringAsFixed(0)}', icon: Icons.pie_chart_rounded, color: kTeal)),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BudgetPage())),
+            child: _StatCard(label: 'Bütçe Kullanımı', value: '%${budgetUsage.toStringAsFixed(0)}', icon: Icons.pie_chart_rounded, color: kTeal),
+          ),
+        ),
         const SizedBox(width: 12),
-        Expanded(child: _StatCard(label: 'Aktif Hedef', value: '$activeGoals', icon: Icons.flag_rounded, color: kYellow)),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => widget.onTabSelect(2),
+            child: _StatCard(label: 'Aktif Hedef', value: '$activeGoals', icon: Icons.flag_rounded, color: kYellow),
+          ),
+        ),
         const SizedBox(width: 12),
-        Expanded(child: _StatCard(label: 'Toplam Borç', value: '₺${totalDebt.toStringAsFixed(0)}', icon: Icons.credit_card_rounded, color: kRed)),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DebtPage())),
+            child: _StatCard(label: 'Toplam Borç', value: '₺${totalDebt.toStringAsFixed(0)}', icon: Icons.credit_card_rounded, color: kRed),
+          ),
+        ),
       ],
     );
   }
@@ -925,41 +940,16 @@ class _MoreTab extends StatelessWidget {
     }
   }
 
-  void _showRoboAdvisorInfo(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: kBgSurface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('Robo-Advisor Aktif! 🧠', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          content: Text(
-            'Finansal koçunuz projedeki kumbaralarınızda aktiftir.\n\n"Hedeflerim" sekmesine giderek dilediğiniz kumbara kartı üzerindeki 🧠 simgesine tıklayıp, yapay zekanın hedefinize giden yolda size özel hazırladığı analiz ve tasarruf önerilerini anında alabilirsiniz.',
-            style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13, height: 1.4),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                onTabSelect(2); // Go to Goals
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: kPurple),
-              child: const Text('Hedeflerime Git'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final items = [
+    const items = [
+      _MoreItem(Icons.pie_chart_rounded, 'Aylık Bütçe Yönetimi', kTeal),
+      _MoreItem(Icons.psychology_rounded, 'Robo-Advisor AI Sohbet', kPurple),
       _MoreItem(Icons.flag_rounded, 'Finansal Hedefler', kYellow),
-      _MoreItem(Icons.show_chart_rounded, 'Robo-Advisor', kPurple),
-      _MoreItem(Icons.school_rounded, 'Finansal Eğitim', kTeal),
+      _MoreItem(Icons.school_rounded, 'Finansal Eğitim', Colors.blueAccent),
       _MoreItem(Icons.credit_card_rounded, 'Borç Yönetimi', kRed),
-      _MoreItem(Icons.settings_rounded, 'Ayarlar', Colors.white54),
+      _MoreItem(Icons.privacy_tip_outlined, 'Gizlilik Politikası', Colors.tealAccent),
+      _MoreItem(Icons.settings_rounded, 'API & Ayarlar', Colors.white54),
     ];
 
     return SafeArea(
@@ -975,15 +965,19 @@ class _MoreTab extends StatelessWidget {
           const SizedBox(height: 24),
           ...items.map((item) {
             VoidCallback tapAction = () {};
-            if (item.label == 'Finansal Hedefler') {
+            if (item.label == 'Aylık Bütçe Yönetimi') {
+              tapAction = () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BudgetPage()));
+            } else if (item.label == 'Robo-Advisor AI Sohbet') {
+              tapAction = () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RoboAdvisorChatPage()));
+            } else if (item.label == 'Finansal Hedefler') {
               tapAction = () => onTabSelect(2);
-            } else if (item.label == 'Robo-Advisor') {
-              tapAction = () => _showRoboAdvisorInfo(context);
             } else if (item.label == 'Finansal Eğitim') {
               tapAction = () => onTabSelect(3);
             } else if (item.label == 'Borç Yönetimi') {
               tapAction = () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DebtPage()));
-            } else if (item.label == 'Ayarlar') {
+            } else if (item.label == 'Gizlilik Politikası') {
+              tapAction = () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrivacyPolicyPage()));
+            } else if (item.label == 'API & Ayarlar') {
               tapAction = () => _showSettingsDialog(context);
             }
 

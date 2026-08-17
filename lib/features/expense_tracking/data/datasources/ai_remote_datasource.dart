@@ -31,7 +31,7 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
 
     final imagePart = DataPart(mimeType, imageBytes);
     
-    final prompt = '''
+    const prompt = '''
 Aşağıdaki fiş/fatura görselini incele ve üzerindeki yazıları okuyarak metin çıkar.
 Çıkardığın metne göre harcamayı analiz et ve SADECE geçerli bir JSON objesi dön.
 

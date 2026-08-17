@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,10 +49,12 @@ class _AddExpensePageState extends State<AddExpensePage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source, imageQuality: 85);
 
-    if (pickedFile != null && context.mounted) {
+    if (pickedFile != null) {
       final bytes = await pickedFile.readAsBytes();
       final mimeType = pickedFile.mimeType ?? 'image/jpeg';
-      context.read<ExpenseBloc>().add(AnalyzeReceiptImageEvent(bytes, mimeType));
+      if (mounted) {
+        context.read<ExpenseBloc>().add(AnalyzeReceiptImageEvent(bytes, mimeType));
+      }
     }
   }
 

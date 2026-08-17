@@ -28,6 +28,9 @@ import 'features/saving_goals/domain/repositories/goal_repository.dart';
 import 'features/saving_goals/domain/usecases/goal_usecases.dart';
 import 'features/saving_goals/presentation/bloc/goal_bloc.dart';
 
+// Robo Advisor
+import 'features/robo_advisor/data/datasources/robo_advisor_datasource.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -82,6 +85,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton<GoalRemoteDataSource>(() => GoalRemoteDataSourceImpl(firestore: sl()));
   sl.registerLazySingleton<GoalAiDataSource>(() => GoalAiDataSourceImpl());
+
+  //! ---- ROBO ADVISOR FEATURE ----
+  sl.registerLazySingleton<RoboAdvisorDataSource>(() => RoboAdvisorDataSourceImpl());
 
   //! ---- EXTERNAL DEPENDENCIES ----
   sl.registerLazySingleton(() => FirebaseAuth.instance);

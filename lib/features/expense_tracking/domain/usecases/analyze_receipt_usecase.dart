@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import '../../../../core/usecases/usecase.dart';
 import '../entities/expense_entity.dart';
 import '../repositories/expense_repository.dart';
 
