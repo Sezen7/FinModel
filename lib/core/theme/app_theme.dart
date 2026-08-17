@@ -83,6 +83,7 @@ class AppTheme {
       colorScheme: const ColorScheme.light(
         primary: kPurple,
         secondary: kGreen,
+        surface: Colors.white,
         error: kRed,
       ),
     );

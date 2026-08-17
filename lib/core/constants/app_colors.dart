@@ -14,7 +14,7 @@ const kBgCard = Color(0xFF13102A);
 const kBgSurface = Color(0xFF1A1730);
 
 // ─── Text Colors ────────────────────────────────────────────────
-const kTextPrimary = Colors.white;
+const kTextPrimary = Color(0xFFFFFFFF);
 const kTextSecondary = Color(0xFF8E8BAE);
 const kTextMuted = Color(0xFF5C5A72);
 
