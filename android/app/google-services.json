@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "963813242008",
+    "project_id": "sezen-finmodel",
+    "storage_bucket": "sezen-finmodel.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963813242008:android:8c14f883bb8a64b1764ced",
+        "android_client_info": {
+          "package_name": "com.example.finmodel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZvUIExJir4Qixx76_TmMJAlgOxV71hzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
