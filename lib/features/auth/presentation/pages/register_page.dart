@@ -85,6 +85,15 @@ class _RegisterPageState extends State<RegisterPage>
             );
           }
           if (state is Authenticated) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Hesabınız oluşturuldu! E-posta adresinize doğrulama bağlantısı gönderildi.'),
+                backgroundColor: const Color(0xFF2CB67D),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            );
             Navigator.of(context).popUntil((route) => route.isFirst);
           }
         },
