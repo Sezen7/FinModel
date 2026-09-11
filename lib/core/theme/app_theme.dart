@@ -60,7 +60,7 @@ class AppTheme {
           borderSide: const BorderSide(color: kRed, width: 1.5),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: kBgCard,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         elevation: 0,
