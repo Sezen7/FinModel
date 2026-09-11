@@ -68,20 +68,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final updatedUser = _firebaseAuth.currentUser;
       if (updatedUser == null) throw FirebaseAuthException(code: 'user-not-found');
 
-      // Save user details to Firestore
-      await FirebaseFirestore.instance.collection('users').doc(updatedUser.uid).set({
-        'uid': updatedUser.uid,
-        'email': email,
-        'displayName': displayName,
-        'profession': profession,
-        'estimatedIncome': estimatedIncome,
-        'estimatedExpense': estimatedExpense,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      // Save user details to Firestore safely
+      try {
+        await FirebaseFirestore.instance.collection('users').doc(updatedUser.uid).set({
+          'uid': updatedUser.uid,
+          'email': email,
+          'displayName': displayName,
+          'profession': profession,
+          'estimatedIncome': estimatedIncome,
+          'estimatedExpense': estimatedExpense,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      } catch (_) {
+        // Quietly fail firestore save if offline/permission issue
+      }
 
       return UserModel.fromFirebaseUser(updatedUser);
     } on FirebaseAuthException catch (e) {
       throw _mapFirebaseException(e);
+    } catch (e) {
+      throw Exception('Kayıt oluşturma hatası: ${e.toString().replaceAll("Exception: ", "")}');
     }
   }
 
@@ -89,7 +95,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) throw Exception('Google sign in iptal edildi.');
+      if (googleUser == null) throw Exception('Google ile giriş iptal edildi.');
 
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -101,6 +107,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserModel.fromFirebaseUser(userCredential.user!);
     } on FirebaseAuthException catch (e) {
       throw _mapFirebaseException(e);
+    } catch (e) {
+      final errStr = e.toString();
+      if (errStr.contains('CLIENT_ID') || errStr.contains('ClientId') || errStr.contains('google_sign_in_web')) {
+        throw Exception('Google Sign-In web üzerinde OAuth Client ID yapılandırması gerektirir. Lütfen E-posta ile giriş yapın veya Hızlı Demo Girişi seçeneğini kullanın.');
+      }
+      throw Exception('Google ile giriş hatası: ${errStr.replaceAll("Exception: ", "")}');
     }
   }
 
@@ -145,13 +157,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       case 'weak-password':
         return Exception('Şifre en az 6 karakter olmalıdır.');
       case 'invalid-email':
-        return Exception('Geçersiz e-posta adresi.');
+        return Exception('Geçersiz e-posta adresi biçimi.');
       case 'operation-not-allowed':
-        return Exception('Firebase üzerinden Email/Şifre girişi aktif değil. Lütfen Console\'dan açın.');
+        return Exception('Firebase e-posta girişi henüz aktif edilmemiş. Lütfen Hızlı Demo Girişini kullanın.');
       case 'too-many-requests':
-        return Exception('Çok fazla başarısız deneme. Lütfen bekleyin.');
+        return Exception('Çok fazla başarısız deneme. Lütfen biraz bekleyin.');
+      case 'network-request-failed':
+        return Exception('İnternet bağlantınızı kontrol ediniz.');
       default:
-        return Exception(e.message ?? 'Kimlik doğrulama hatası oluştu.');
+        return Exception(e.message ?? 'Kimlik doğrulama hatası (${e.code}).');
     }
   }
 }

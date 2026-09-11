@@ -136,23 +136,29 @@ class _LoginPageState extends State<LoginPage>
   Widget _buildLogo() {
     return Center(
       child: Container(
-        width: 80,
-        height: 80,
+        width: 90,
+        height: 90,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            colors: [Color(0xFF7F5AF0), Color(0xFF2CB67D)],
-          ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF7F5AF0).withOpacity(0.45),
-              blurRadius: 28,
+              color: const Color(0xFF7F5AF0).withOpacity(0.5),
+              blurRadius: 30,
               spreadRadius: 4,
             ),
           ],
         ),
-        child: const Icon(Icons.account_balance_wallet_rounded,
-            color: Colors.white, size: 40),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(45),
+          child: Image.asset(
+            'assets/images/app_logo.png',
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              color: const Color(0xFF7F5AF0),
+              child: const Icon(Icons.account_balance_wallet_rounded, color: Colors.white, size: 44),
+            ),
+          ),
+        ),
       ),
     );
   }

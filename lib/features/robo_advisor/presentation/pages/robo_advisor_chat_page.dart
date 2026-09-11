@@ -100,8 +100,8 @@ class _RoboAdvisorChatPageState extends State<RoboAdvisorChatPage> {
       activeGoalsCount = goalState.goals.where((g) => !g.isCompleted).length;
     }
 
-    try {
-      if (uid.isNotEmpty) {
+    if (uid.isNotEmpty) {
+      try {
         final incomeDoc = await FirebaseFirestore.instance.collection('incomes').doc(uid).get();
         if (incomeDoc.exists && incomeDoc.data() != null) {
           monthlyIncome = (incomeDoc.data()!['amount'] as num?)?.toDouble() ?? 0.0;
@@ -117,8 +117,12 @@ class _RoboAdvisorChatPageState extends State<RoboAdvisorChatPage> {
             totalDebt += (doc.data()['amount'] as num?)?.toDouble() ?? 0.0;
           }
         }
+      } catch (fsError) {
+        debugPrint('Firestore offline fallback: $fsError');
       }
+    }
 
+    try {
       final aiResponse = await _advisorDataSource.askFinancialAdvisor(
         userMessage: prompt,
         chatHistory: _messages,

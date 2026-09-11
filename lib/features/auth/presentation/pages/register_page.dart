@@ -152,13 +152,10 @@ class _RegisterPageState extends State<RegisterPage>
     return Column(
       children: [
         Container(
-          width: 64,
-          height: 64,
+          width: 72,
+          height: 72,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [Color(0xFF2CB67D), Color(0xFF7F5AF0)],
-            ),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFF2CB67D).withOpacity(0.4),
@@ -167,8 +164,17 @@ class _RegisterPageState extends State<RegisterPage>
               ),
             ],
           ),
-          child: const Icon(Icons.person_add_rounded,
-              color: Colors.white, size: 32),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(36),
+            child: Image.asset(
+              'assets/images/app_logo.png',
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                color: const Color(0xFF2CB67D),
+                child: const Icon(Icons.person_add_rounded, color: Colors.white, size: 32),
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: 18),
         const Text(
